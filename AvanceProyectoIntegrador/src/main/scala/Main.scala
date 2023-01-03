@@ -248,7 +248,7 @@ object Main extends App {
     val pelicula = movieBudget.filter(x => x._2 == "it").map(_._1)
     pelicula.count(x => x.nonEmpty)
   }
-  println("\nPeliculas de Documentarios: " + numLenguajeItaliano)
+  println("\nPeliculas en lenguaje Italiano: " + numLenguajeItaliano)
 
   //¿Nombre de la pelicula mas popular?
 
