@@ -1,3 +1,4 @@
+// Carlos Montero, Felipe Jimenez, Isaac Quezada
 package Main
 
 import com.github.tototoshi.csv.CSVReader
@@ -41,6 +42,9 @@ object MainPrincipal2 extends App {
   // columna 3
   isEmpty("genres")
 
+  val peliculasSinGenero = data.map(x => (x.get("original_title").get, x.get("genres").get)).filter(x => x._2.isEmpty).map(_._1)
+  println("\nPeliculas sin genres: \n" + peliculasSinGenero)
+
   // columna 4
   isEmpty("homepage")
 
@@ -56,8 +60,14 @@ object MainPrincipal2 extends App {
   // columna 9
   isEmpty("overview")
 
+  val peliculasSinOverview = data.map(x => (x.get("original_title").get, x.get("overview").get)).filter(x => x._2.isEmpty).map(_._1)
+  println("\nPeliculas sin overview: \n" + peliculasSinOverview)
+
   // columna 13
   isEmpty("release_date")
+
+  val peliculasSinReleaseDate = data.map(x => (x.get("original_title").get, x.get("release_date").get)).filter(x => x._2.isEmpty).map(_._1)
+  println("\nPeliculas sin release_date: \n" + peliculasSinReleaseDate)
 
   // columna 17
   isEmpty("status")
@@ -71,7 +81,13 @@ object MainPrincipal2 extends App {
   // columna 22
   isEmpty("cast")
 
+  val peliculasSinCast= data.map(x => (x.get("original_title").get, x.get("cast").get)).filter(x => x._2.isEmpty).map(_._1)
+  println("\nPeliculas sin cast: \n" + peliculasSinCast)
+
   // columna 24
   isEmpty("director")
+
+  val peliculasSinDirector = data.map(x => (x.get("original_title").get, x.get("director").get)).filter(x => x._2.isEmpty).map(_._1)
+  println("\nPeliculas sin cast: \n" + peliculasSinDirector)
 
 }

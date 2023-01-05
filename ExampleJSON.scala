@@ -1,3 +1,4 @@
+// Carlos Montero, Felipe Jimenez, Isaac Quezada
 package Main
 
 import play.api.libs.json._
@@ -112,8 +113,6 @@ object ExampleJSON {
 
     val friendsEx2 = (JsonEx2 \\ "friends").flatMap(_ \\ "name")
     println("\n\tFriends: \t" + friendsEx2)
-
-
 
   }
 }

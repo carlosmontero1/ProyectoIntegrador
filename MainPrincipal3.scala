@@ -1,3 +1,4 @@
+// Carlos Montero, Felipe Jimenez, Isaac Quezada
 package Main
 
 import com.github.tototoshi.csv.CSVReader
@@ -65,24 +66,47 @@ object MainPrincipal3 extends App {
 
   }
 
+  val columnaMaxMin = (columna : String) => {
+    val columnaGroupBy = data.flatMap(x => x.get(columna)).filter(_.nonEmpty).groupBy {
+      case x => x
+    }.map {
+      case x => (x._1, x._2.size)
+    }
+
+    println("\n" + columna + " que -MAS- aparece: \t" + columnaGroupBy.maxBy(_._2)._1 +
+      "\n\tcon la cantidad: \t" + columnaGroupBy.maxBy(_._2)._2)
+
+    println("\n" + columna + " que -MENOS- aparece: \t" + columnaGroupBy.minBy(_._2)._1 +
+      "\n\tcon la cantidad: \t" + columnaGroupBy.minBy(_._2)._2)
+  }
+
   // columna 3
   seperateWord("genres")
   // *** Science Fiction esta separado pero debe ir junto, se utilizo un .replace para que se convierta en Science-Fiction ***
 
+  columnaMaxMin("genres")
+
   // columna 6
-  //seperateWord("keywords")
+  seperateWord("keywords")
 
   // columna 7
   seperateLine("original_language")
 
+  columnaMaxMin("original_language")
+
   // columna 8
   //seperateWord("original_title")
+
+  println("\n---------------------------------------------------------------------------\n")
+  columnaMaxMin("original_title")
 
   // columna 9
   //seperateWord("overview")
 
   // columna 17
   seperateLine("status")
+
+  columnaMaxMin("status")
 
   // columna 18
   //seperateWord("tagline")
@@ -97,7 +121,7 @@ object MainPrincipal3 extends App {
   }.filter(_._2 > 1)
 
   println("\n---------------------------------------------------------------------------")
-  println("\nTitulos duplicados: " + duplicateTitle)
+  println("\nTitulos duplicados: \t" + duplicateTitle)
 
   // columna 22
   //seperateWord("cast")
@@ -112,5 +136,8 @@ object MainPrincipal3 extends App {
   }.toList.filter(_._2 > 1).sortBy(_._2)
 
   println("\n---------------------------------------------------------------------------")
-  println("\n" + directorGroupBy)
+  println("\nDirectores con mas de 1 pelicula: \n" + directorGroupBy)
+
+  columnaMaxMin("director")
+
 }
