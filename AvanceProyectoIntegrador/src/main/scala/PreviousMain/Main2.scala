@@ -1,3 +1,5 @@
+package PreviousMain
+
 import com.github.tototoshi.csv.CSVReader
 
 import java.io.File
@@ -159,7 +161,7 @@ object Main2 extends App {
 
   // genres
 
-  /*val genresTypes = data.flatMap(x => x.get("genres")).flatMap(x => x.split(" ").toList).toSet
+  val genresTypes = data.flatMap(x => x.get("genres")).flatMap(x => x.split(" ").toList).toSet
   println("\nTipos de generos: \n" + genresTypes.toList.sorted)
 
   val genresADDCount = {
@@ -171,7 +173,7 @@ object Main2 extends App {
     }
   }
 
-  println("\nCantidad de peliculas por genero: \n" + genresADDCount)*/
+  println("\nCantidad de peliculas por genero: \n" + genresADDCount)
 
   // Science fiction deberia estar junto, un humano sabe que van juntos pero la computadora no, asi es que se debe realizar
   // los pasos necesarios para unirlos o no separarlos desde un inicio.
