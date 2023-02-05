@@ -8,6 +8,9 @@ import java.io.File
 import scala.util.Try
 import scala.util.matching.Regex
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Paths, StandardOpenOption}
+
 object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
@@ -26,7 +29,7 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Movie = data
+  /*val Movie = data
     .map(x =>
       (
         x("index").toInt,
@@ -49,11 +52,13 @@ object SentenciasInsertInto extends App {
         x("vote_average").toDouble,
         x("vote_count").toInt,
         x("director")
-      )).sortBy(_._4)
+      ))
 
-  /*val newRowMovie = Movie.map(x =>
+  //println(Movie)
+
+  val newRowMovie = Movie.map(x =>
     sql"""
-         |INSERT INTO Movie(`index`, budget, homepage, idMovie, name_original_language, original_title, overview, popularity, release_date, revenue, runtime, nameStatus, tagline, title, vote_average, vote_count, nameDirector)
+         |INSERT INTO Movie (`index`, budget, homepage, idMovie, name_original_language, original_title, overview, popularity, release_date, revenue, runtime, nameStatus, tagline, title, vote_average, vote_count, nameDirector)
          |VALUES
          |(${x._1}, ${x._2}, ${x._3}, ${x._4}, ${x._5}, ${x._6}, ${x._7}, ${x._8}, ${x._9}, ${x._10}, ${x._11}, ${x._12}, ${x._13}, ${x._14}, ${x._15}, ${x._16}, ${x._17})
          """.stripMargin
@@ -62,14 +67,14 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Status = data
+  /*val Status = data
     .flatMap(x => x.get("status"))
     .distinct
     .sorted
 
   //println(Status)
 
-  /*val newRowStatus = Status.map(x =>
+  val newRowStatus = Status.map(x =>
     sql"""
          |INSERT INTO Status (nameStatus)
          |VALUES
@@ -80,7 +85,7 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Director = data
+  /*val Director = data
     .flatMap(x => x.get("director"))
     .filter(!_.equals(""))
     .map(StringContext.processEscapes)
@@ -89,7 +94,7 @@ object SentenciasInsertInto extends App {
 
   //println(Director)
 
-  /*val newRow6 = Director.map(x =>
+  val newRow6 = Director.map(x =>
       sql"""
            |INSERT INTO Director (nameDirector)
            |VALUES
@@ -100,14 +105,14 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val original_language = data
+  /*val original_language = data
     .flatMap(x => x.get("original_language"))
     .distinct
     .sorted
 
   //println(original_language)
 
-  /*val newRowOrigLang = original_language.map(x =>
+  val newRowOrigLang = original_language.map(x =>
       sql"""
            |INSERT INTO original_language (name_original_language)
            |VALUES
@@ -118,20 +123,19 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Genre = data.flatMap(x =>
-    x.get("genres")
-      .map(x => x.replace("Science Fiction", "Science-Fiction"))
-  )
-    .flatMap(x => x.split(" "))
+  /*val Genre = data
+    .flatMap(x => x.get("genres"))
     .filter(_.nonEmpty)
+    .map(x => x.replace("Science Fiction", "Science-Fiction"))
+    .flatMap(x => x.split(" "))
     .distinct
     .sorted
 
   //println(Genre)
 
-  /*val newRowGenero = Genre.map(x =>
+  val newRowGenero = Genre.map(x =>
         sql"""
-             |INSERT INTO Genre(nameGenre)
+             |INSERT INTO Genre (nameGenre)
              |VALUES
              |(${x})
              """.stripMargin
@@ -140,7 +144,7 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Movie_Genres = data
+  /*val Movie_Genres = data
     .map(x =>
       (x("id"), x("genres").replace("Science Fiction", "Science-Fiction")))
     .filter(_._2.nonEmpty)
@@ -151,9 +155,9 @@ object SentenciasInsertInto extends App {
 
   //println(Movie_Genres)
 
-  /*val newRowMovie_Genres = Movie_Genres.map(x =>
+  val newRowMovie_Genres = Movie_Genres.map(x =>
     sql"""
-         |INSERT INTO Movies_Genres(id, nameGenre)
+         |INSERT INTO Movie_Genres(idMovie, nameGenre)
          |VALUES
          |(${x._1}, ${x._2})
              """.stripMargin
@@ -162,7 +166,7 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val production_companies = data
+  /*val production_companies = data
     .flatMap(_.get("production_companies"))
     .map(Json.parse)
     .flatMap(_.as[List[JsValue]])
@@ -172,7 +176,7 @@ object SentenciasInsertInto extends App {
 
   //println(production_companies)
 
-  /*val newRowProduction_Companies = production_companies.map(x =>
+  val newRowProduction_Companies = production_companies.map(x =>
       sql"""
            |INSERT INTO production_companies(namePCompany, idPCompany)
            |VALUES
@@ -183,17 +187,17 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Movie_production_companies = data
+  /*val Movie_production_companies = data
     .map(x =>
       (x("id"), Json.parse(x("production_companies"))))
     .map(x => (x._1, x._2\\"id"))
     .filter(_._2.nonEmpty)
     .flatMap(x => x._2.map((x._1, _)))
-    .sortBy(_._1.toInt)
+    .map(x => (x._1, x._2.as[Int]))
 
   //println(Movie_production_companies)
 
-  /*val newRowMovie_production_companies = Movie_production_companies.map(x =>
+  val newRowMovie_production_companies = Movie_production_companies.map(x =>
       sql"""
            |INSERT INTO Movie_production_companies(idMovie, idPCompany)
            |VALUES
@@ -204,7 +208,7 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val production_countries = data
+  /*val production_countries = data
     .flatMap(_.get("production_countries"))
     .map(Json.parse)
     .flatMap(_.as[List[JsValue]])
@@ -214,7 +218,7 @@ object SentenciasInsertInto extends App {
 
   //println(production_countries)
 
-  /*val newRowProduction_Countries = production_countries.map(x =>
+  val newRowProduction_Countries = production_countries.map(x =>
         sql"""
              |INSERT INTO production_countries(iso_3166_1, namePCountry)
              |VALUES
@@ -225,17 +229,17 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Movie_production_countries = data
+  /*val Movie_production_countries = data
     .map(x =>
       (x("id"), Json.parse(x("production_countries"))))
     .map(x => (x._1, x._2 \\ "iso_3166_1"))
     .filter(_._2.nonEmpty)
     .flatMap(x => x._2.map((x._1, _)))
-    .sortBy(_._1.toInt)
+    .map(x => (x._1, x._2.as[String]))
 
   //println(Movie_production_countries)
 
-  /*val newRowMovie_production_countries = Movie_production_countries.map(x =>
+  val newRowMovie_production_countries = Movie_production_countries.map(x =>
       sql"""
            |INSERT INTO Movie_production_countries(idMovie, iso_3166_1)
            |VALUES
@@ -246,7 +250,7 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val spoken_languages = data
+  /*val spoken_languages = data
     .flatMap(x => x.get("spoken_languages"))
     .map(Json.parse)
     .flatMap(_.as[List[JsValue]])
@@ -256,7 +260,7 @@ object SentenciasInsertInto extends App {
 
   //println(spoken_languages)
 
-  /*val newRowSpoken_Languages = spoken_languages.map(x =>
+  val newRowSpoken_Languages = spoken_languages.map(x =>
         sql"""
              |INSERT INTO spoken_languages(iso_639_1, nameSLang)
              |VALUES
@@ -267,17 +271,17 @@ object SentenciasInsertInto extends App {
 
   // ------------------------------------------------------------------------------------------------
 
-  val Movie_spoken_langauges = data
+  /*val Movie_spoken_langauges = data
     .map(x =>
       (x("id"), Json.parse(x("spoken_languages"))))
     .map(x => (x._1, x._2 \\ "iso_639_1"))
     .filter(_._2.nonEmpty)
     .flatMap(x => x._2.map((x._1, _)))
-    .sortBy(_._1.toInt)
+    .map(x => (x._1.toInt, x._2.as[String]))
 
   //println(Movie_spoken_langauges)
 
-  /*val newRowMovie_spoken_langauges = Movie_spoken_langauges.map(x =>
+  val newRowMovie_spoken_langauges = Movie_spoken_langauges.map(x =>
       sql"""
            |INSERT INTO Movie_spoken_langauges(idMovie, iso_639_1)
            |VALUES
@@ -291,7 +295,7 @@ object SentenciasInsertInto extends App {
   def actorsNames(dataRaw: String): Option[String] = {
     val response: Response = requests
       .post("http://api.meaningcloud.com/topics-2.0",
-        data = Map("key" -> "1f53fad65cf65815811ac6ff5bdc8c49",
+        data = Map("key" -> "ab21efdcb3dc22d0dff54c2763d5780d",
           "lang" -> "en",
           "txt" -> dataRaw,
           "tt" -> "e"),
@@ -303,11 +307,11 @@ object SentenciasInsertInto extends App {
       Option.empty
   }
 
-  /*val Cast = data
+  val Cast = data
       .map(row => row("cast"))
       .filter(_.nonEmpty)
       .map(StringContext.processEscapes)
-      .take(10) //Use un número limitado para hacer sus pruebas, pero, al final debe analizar todos los datos.
+      //.take(10) //Use un número limitado para hacer sus pruebas, pero, al final debe analizar todos los datos.
       .map(actorsNames)
       .map(json => Try(Json.parse(json.get)))
       .filter(_.isSuccess)
@@ -315,23 +319,22 @@ object SentenciasInsertInto extends App {
       .flatMap(json => json("entity_list").as[JsArray].value)
       .map(_("form"))
       .map(data => data.as[String])
-      .toSet // Para elimnar duplicados*/
+      .toSet // Para elimnar duplicados
 
   //println(Cast)
 
-  /*val newRowCast = Cast.map(x =>
+  val newRowCast = Cast.map(x =>
         sql"""
              |INSERT INTO `Cast`(nameCast)
              |VALUES
              |(${x})
                  """.stripMargin
           .update
-          .apply())*/
+          .apply())
 
   // ------------------------------------------------------------------------------------------------
 
   /*val Movie_Cast = data
-    .take(10)
     .map(x =>
       (x("id").toInt, actorsNames(x("cast")))
     )
@@ -343,11 +346,11 @@ object SentenciasInsertInto extends App {
     ))
     .map(x => (x._1, x._2("form")))
     .map(x => (x._1, x._2.as[String]))
-    .sortBy(_._1)*/
+    .sortBy(_._1)
 
   //println(Movie_Cast)
 
-  /*val newRowMovie_Cast = Movie_Cast.map(x =>
+  val newRowMovie_Cast = Movie_Cast.map(x =>
           sql"""
                |INSERT INTO Movie_Cast(idMovie, nameCast)
                |VALUES
@@ -393,7 +396,6 @@ object SentenciasInsertInto extends App {
     .flatMap(_.as[List[JsValue]])
     .map(x => (x("name").as[String], x("gender").as[Int], x("department").as[String], x("job").as[String], x("credit_id").as[String], x("id").as[Int]))
     .distinct
-    .sortBy(_._6)
 
   //println(Crew)
 
@@ -406,28 +408,145 @@ object SentenciasInsertInto extends App {
               .update
               .apply())*/
 
-  // FALTA MOVIE CREW
+  // ------------------------------------------------------------------------------------------------
 
+  val crewCredit_id = data
+    .map(row => row("crew"))
+    .map(replacePatterns(_, patternsTR))
+    .map(text => text.replace("'", "\""))
+    .map(text => text.replace("-u0027", "'"))
+    .map(text => text.replace("-u0022", "\\\""))
+    .map(text => Try(Json.parse(text)))
+    .filter(_.isSuccess)
+    .map(_.get)
+    .map(x => x \\ "credit_id")
+    .map(_.toList)
 
+  val Movie_Crew = data
+    .flatMap(x => x.get("id")).zip(crewCredit_id)
+    .flatMap(x => x._2.map(y => (x._1, y)))
+    .map(x => (x._1.toInt, x._2.as[String]))
 
-  /*val newTable = sql"""
-                   |CREATE TABLE SUPERTABLE (
-                   |  nameCrew varchar(255),
-                   |  gender varchar(255),
-                   |  department varchar(255),
-                   |  job varchar(255),
-                   |  credit_id varchar(255),
-                   |  idCrew int PRIMARY KEY
-                   |);
-                   |""".stripMargin
-                .update
-                .apply()*/
+  //println(Movie_Crew.count(_._1 == 29371))
 
-  /*val newTable =
+  //println(Movie_Crew.filter(_._1 == 199995))
+
+  /*val newRowMovie_Crew = Movie_Crew.map(x =>
     sql"""
-         |DROP TABLE SUPERTABLE;
-         |""".stripMargin
+         |INSERT INTO Movie_Crew(idMovie, credit_id)
+         |VALUES
+         |(${x._1}, ${x._2})
+                     """.stripMargin
       .update
-      .apply()*/
+      .apply())*/
+
+  // ------------------------------------------------------------------------------------------------
+
+  // Scripts
+
+  // ------------------------------------------------------------------------------------------------
+
+  // Director
+
+  /*val SQL_INSERT_PATTERN_Director =
+    """INSERT INTO Director (`nameDirector`)
+      |VALUES
+      |('%s');
+      |""".stripMargin
+
+  val scriptDataDirector = Director
+    .map(x => x.replace("'", "\\\'"))
+    .map(x => SQL_INSERT_PATTERN_Director.formatLocal(java.util.Locale.US,
+      x,
+    ))
+
+  val scriptFileDirector = new File("/Users/carlosmontero/Desktop/DIRECTOR.sql")
+  if (scriptFileDirector.exists()) scriptFileDirector.delete()
+
+  scriptDataDirector.foreach(insert =>
+    Files.write(Paths.get("/Users/carlosmontero/Desktop/Director.sql"),
+      insert.getBytes(StandardCharsets.UTF_8),
+      StandardOpenOption.CREATE,
+      StandardOpenOption.APPEND)
+  )*/
+
+  // ------------------------------------------------------------------------------------------------
+
+  // Status
+
+  /*val SQL_INSERT_PATTERN_Status =
+    """INSERT INTO `Status` (`nameStatus`)
+      |VALUES
+      |('%s');
+      |""".stripMargin
+
+  val scriptDataStatus = Status
+    .map(x => SQL_INSERT_PATTERN_Status.formatLocal(java.util.Locale.US,
+      x,
+    ))
+
+  val scriptFileStatus = new File("/Users/carlosmontero/Desktop/Status.sql")
+  if (scriptFileStatus.exists()) scriptFileStatus.delete()
+
+  scriptDataStatus.foreach(insert =>
+    Files.write(Paths.get("/Users/carlosmontero/Desktop/Status.sql"),
+      insert.getBytes(StandardCharsets.UTF_8),
+      StandardOpenOption.CREATE,
+      StandardOpenOption.APPEND)
+  )*/
+
+  // ------------------------------------------------------------------------------------------------
+
+  // original_language
+
+  /*val SQL_INSERT_PATTERN_Original_language =
+      """INSERT INTO `original_language` (`name_original_language`)
+        |VALUES
+        |('%s');
+        |""".stripMargin
+
+    val scriptDataOriginal_language = original_language
+      .map(x => SQL_INSERT_PATTERN_Original_language.formatLocal(java.util.Locale.US,
+        x,
+      ))
+
+    val scriptFileOriginal_language = new File("/Users/carlosmontero/Desktop/original_language.sql")
+    if (scriptFileOriginal_language.exists()) scriptFileOriginal_language.delete()
+
+  scriptDataOriginal_language.foreach(insert =>
+      Files.write(Paths.get("/Users/carlosmontero/Desktop/original_language.sql"),
+        insert.getBytes(StandardCharsets.UTF_8),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.APPEND)
+    )*/
+
+  // ------------------------------------------------------------------------------------------------
+
+  // Genre
+
+  /*val SQL_INSERT_PATTERN_Genres =
+      """INSERT INTO `Genre` (`nameGenre`)
+        |VALUES
+        |('%s');
+        |""".stripMargin
+
+    val scriptDataGenres = Genre
+      .map(x => SQL_INSERT_PATTERN_Genres.formatLocal(java.util.Locale.US,
+        x,
+      ))
+
+    val scriptFileGenres = new File("/Users/carlosmontero/Desktop/Genres.sql")
+    if (scriptFileGenres.exists()) scriptFileGenres.delete()
+
+  scriptDataGenres.foreach(insert =>
+      Files.write(Paths.get("/Users/carlosmontero/Desktop/Genres.sql"),
+        insert.getBytes(StandardCharsets.UTF_8),
+        StandardOpenOption.CREATE,
+        StandardOpenOption.APPEND)
+    )*/
+
+  // ------------------------------------------------------------------------------------------------
+
+
 
 }
