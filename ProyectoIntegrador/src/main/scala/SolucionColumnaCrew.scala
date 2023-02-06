@@ -69,7 +69,7 @@ object SolucionColumnaCrew extends App {
     (pattern3, "\"", "-u0022")
   )
 
-  def funcion(original: String, patternsTR: List[(Regex, String, String)]) = {
+  def replacePatterns(original: String, patternsTR: List[(Regex, String, String)]) = {
 
     var txtOr = original
     for (p <- patternsTR) {
@@ -84,13 +84,12 @@ object SolucionColumnaCrew extends App {
 
   val crew = data
     .map(row => row("crew"))
-    .map(funcion(_, patternsTR))
+    .map(replacePatterns(_, patternsTR))
     .map(text => text.replace("'", "\""))
     .map(text => text.replace("-u0027", "'"))
     .map(text => text.replace("-u0022", "\\\""))
     .map(text => Try(Json.parse(text)))
     .filter(_.isSuccess)
-    .size
 
   println(crew)
 

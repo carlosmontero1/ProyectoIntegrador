@@ -323,14 +323,14 @@ object SentenciasInsertInto extends App {
 
   //println(Cast)
 
-  val newRowCast = Cast.map(x =>
+  /*val newRowCast = Cast.map(x =>
         sql"""
              |INSERT INTO `Cast`(nameCast)
              |VALUES
              |(${x})
                  """.stripMargin
           .update
-          .apply())
+          .apply())*/
 
   // ------------------------------------------------------------------------------------------------
 

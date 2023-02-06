@@ -291,5 +291,6 @@ object AnalisisExploratorioColumnasNumericas extends App {
     .write(new File("/Users/carlosmontero/Desktop/ColumnasNumericas/Vote_count.png"))
 
 
+
 }
 

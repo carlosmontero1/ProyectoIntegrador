@@ -4,6 +4,8 @@ import com.cibo.evilplot.plot.{BarChart, Histogram}
 import com.cibo.evilplot.plot.aesthetics.DefaultTheme.{DefaultElements, DefaultTheme}
 import play.api.libs.json._
 
+import scala.math._
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Try
@@ -31,8 +33,6 @@ object AnalisisExploratorioColumnasNoNumericas extends App {
   )
 
   // ------------------------------------------------------------------------------------------------
-
-  // Funcion Devuelve List(Clave - Valor)
 
   val groupBy = (list: List[String]) => {
     list.groupBy{
@@ -293,7 +293,7 @@ object AnalisisExploratorioColumnasNoNumericas extends App {
   println("\nStatus + Apariciones:\n-------------------------")
   statusGroupBy.foreach(println(_))
 
-  BarChart(statusGroupBy.map(_._2))
+  BarChart(statusGroupBy.map(_._2).map(x => cbrt(x)))
     .title("Status")
     .xAxis(statusGroupBy.map(_._1))
     .yAxis()
