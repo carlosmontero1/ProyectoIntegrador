@@ -37,20 +37,20 @@ object AnalisisExploratorioColumnasNumericas extends App {
   //¿Cuál es el Budget más alto que se ha invertido en una película?
   val highestBudget = data.flatMap(x => x.get("budget")).filter(_.nonEmpty).maxBy(x => x.toInt)
   println("\nBudget mas alto: " + highestBudget)
-
+  //no agares oe JAJA
   //¿Cuál es el Budget más bajo que se ha invertido en una película?
-  val lowestBudget = data.flatMap(x => x.get("budget")).minBy(x => x.toInt)
+  val lowestBudget = data.flatMap(x => x.get("budget")).filter(_.nonEmpty).minBy(x => x.toInt)
   println("\nBudget mas bajo: " + lowestBudget)
 
   //¿Cuál es el Budget más bajo que se ha invertido en una película? (Sin incluir 0)
-  val lowestBudgetSin0 = data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).minBy(x => x.toInt)
+  val lowestBudgetSin0 = data.flatMap(x => x.get("budget")).filter(_.nonEmpty).filter(x => x.toInt != 0).minBy(x => x.toInt)
   println("\n\t* Budget mas bajo (sin incluir 0): " + lowestBudgetSin0)
 
   //¿Cuánto Budget se invierte en promedio en las películas?
-  val promedioConCero = data.flatMap(x => x.get("budget")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
+  val promedioConCero = data.flatMap(x => x.get("budget")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(_.nonEmpty).map(x => x.toDouble).size
   println("\nPromedio de Budget (incluyendo 0): " + promedioConCero)
 
-  val promedioSinCero = data.flatMap(x => x.get("budget")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
+  val promedioSinCero = data.flatMap(x => x.get("budget")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(_.nonEmpty).filter(x => x.toInt != 0).map(x => x.toDouble).size
   println("\n\t* Presupuesto de Budget (sin incluir 0): " + promedioSinCero)
 
   val budget = List(
@@ -78,22 +78,22 @@ object AnalisisExploratorioColumnasNumericas extends App {
   println("\n------------------------------------\nPopularity:\n------------------------------------")
 
   //¿Cuál es el popularity más alto que se ha invertido en una película?
-  val highestPopularity = data.flatMap(x => x.get("popularity")).maxBy(x => x.toDouble)
+  val highestPopularity = data.flatMap(x => x.get("popularity")).filter(_.nonEmpty).maxBy(x => x.toDouble)
   println("\nPopularity mas alto: " + highestPopularity)
 
   //¿Cuál es el popularity más bajo que se ha invertido en una película?
-  val lowestPopularity = data.flatMap(x => x.get("popularity")).minBy(x => x.toDouble)
+  val lowestPopularity = data.flatMap(x => x.get("popularity")).filter(_.nonEmpty).minBy(x => x.toDouble)
   println("\nPopularity mas bajo: " + lowestPopularity)
 
   //¿Cuál es el popularity más bajo que se ha invertido en una película? (Sin incluir 0)
-  val lowestPopularitySin0 = data.flatMap(x => x.get("popularity")).filter(x => x.toDouble != 0).minBy(x => x.toDouble)
+  val lowestPopularitySin0 = data.flatMap(x => x.get("popularity")).filter(_.nonEmpty).filter(x => x.toDouble != 0).minBy(x => x.toDouble)
   println("\n\t* Popularity mas bajo (sin incluir 0): " + lowestPopularitySin0)
 
   //¿Cuánto popularity se invierte en promedio en las películas?
-  val promedioPopularityConCero = data.flatMap(x => x.get("popularity")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
+  val promedioPopularityConCero = data.flatMap(x => x.get("popularity")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
   println("\nPromedio de Popularity (incluyendo 0): " + promedioPopularityConCero)
 
-  val promedioPopularitySinCero = data.flatMap(x => x.get("popularity")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
+  val promedioPopularitySinCero = data.flatMap(x => x.get("popularity")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
   println("\n\t* Presupuesto de Popularity (sin incluir 0): " + promedioPopularitySinCero)
 
   val popularity = List(
@@ -121,22 +121,22 @@ object AnalisisExploratorioColumnasNumericas extends App {
   println("\n------------------------------------\nRevenue:\n------------------------------------")
 
   //¿Cuál es el presupuesto más alto que se ha invertido en una película?
-  val highestRevenue = data.flatMap(x => x.get("revenue")).maxBy(x => x.toLong)
+  val highestRevenue = data.flatMap(x => x.get("revenue")).filter(_.nonEmpty).maxBy(x => x.toLong)
   println("\nRevenue mas alto: " + highestRevenue)
 
   //¿Cuál es el presupuesto más bajo que se ha invertido en una película?
-  val lowestRevenue = data.flatMap(x => x.get("revenue")).minBy(x => x.toLong)
+  val lowestRevenue = data.flatMap(x => x.get("revenue")).filter(_.nonEmpty).minBy(x => x.toLong)
   println("\nRevenue mas bajo: " + lowestRevenue)
 
   //¿Cuál es el presupuesto más bajo que se ha invertido en una película? (Sin incluir 0)
-  val lowestRevenueSin0 = data.flatMap(x => x.get("revenue")).filter(x => x.toLong != 0).minBy(x => x.toLong)
+  val lowestRevenueSin0 = data.flatMap(x => x.get("revenue")).filter(_.nonEmpty).filter(x => x.toLong != 0).minBy(x => x.toLong)
   println("\n\t* Revenue mas bajo (sin incluir 0): " + lowestRevenueSin0)
 
   //¿Cuánto presupuesto se invierte en promedio en las películas?
-  val promedioRevenueConCero = data.flatMap(x => x.get("revenue")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
+  val promedioRevenueConCero = data.flatMap(x => x.get("revenue")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
   println("\nPromedio de Revenue (incluyendo 0): " + promedioRevenueConCero)
 
-  val promedioRevenueSinCero = data.flatMap(x => x.get("revenue")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
+  val promedioRevenueSinCero = data.flatMap(x => x.get("revenue")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
   println("\n\t* Presupuesto de Revenue (sin incluir 0): " + promedioRevenueSinCero)
 
   val revenue = List(
@@ -254,22 +254,22 @@ object AnalisisExploratorioColumnasNumericas extends App {
   println("\n------------------------------------\nVote Count:\n------------------------------------")
 
   //¿Cuál es el vote_count más alto que se ha invertido en una película?
-  val highestVote_count = data.flatMap(x => x.get("vote_count")).maxBy(x => x.toInt)
+  val highestVote_count = data.flatMap(x => x.get("vote_count")).filter(_.nonEmpty).maxBy(x => x.toInt)
   println("\nVote_count mas alto: " + highestVote_count)
 
   //¿Cuál es el vote_count más bajo que se ha invertido en una película?
-  val lowestVote_count = data.flatMap(x => x.get("vote_count")).minBy(x => x.toInt)
+  val lowestVote_count = data.flatMap(x => x.get("vote_count")).filter(_.nonEmpty).minBy(x => x.toInt)
   println("\nVote_count mas bajo: " + lowestVote_count)
 
   //¿Cuál es el vote_count más bajo que se ha invertido en una película? (Sin incluir 0)
-  val lowestVote_countSin0 = data.flatMap(x => x.get("vote_count")).filter(x => x.toInt != 0).minBy(x => x.toInt)
+  val lowestVote_countSin0 = data.flatMap(x => x.get("vote_count")).filter(_.nonEmpty).filter(x => x.toInt != 0).minBy(x => x.toInt)
   println("\n\t* Vote_count mas bajo (sin incluir 0): " + lowestVote_countSin0)
 
   //¿Cuánto vote_count se invierte en promedio en las películas?
-  val promedioVote_countConCero = data.flatMap(x => x.get("vote_count")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
+  val promedioVote_countConCero = data.flatMap(x => x.get("vote_count")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).map(x => x.toDouble).size
   println("\nPromedio de Vote_count (incluyendo 0): " + promedioVote_countConCero)
 
-  val promedioVote_countSinCero = data.flatMap(x => x.get("vote_count")).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
+  val promedioVote_countSinCero = data.flatMap(x => x.get("vote_count")).filter(_.nonEmpty).map(x => x.toDouble).sum / data.flatMap(x => x.get("budget")).filter(x => x.toInt != 0).map(x => x.toDouble).size
   println("\n\t* Presupuesto de Vote_count (sin incluir 0): " + promedioVote_countSinCero)
 
   val vote_count = List(
@@ -289,8 +289,6 @@ object AnalisisExploratorioColumnasNumericas extends App {
     .bottomLegend()
     .render()
     .write(new File("/Users/carlosmontero/Desktop/ColumnasNumericas/Vote_count.png"))
-
-
 
 }
 

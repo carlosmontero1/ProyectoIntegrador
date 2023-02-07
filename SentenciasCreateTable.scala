@@ -22,36 +22,40 @@ object SentenciasCreateTable extends App {
   // ------------------------------------------------------------------------------------------------
 
   // CREATE TABLE
-/*
 
-  val newTableMovie =
+  // MOVIE
+
+  /*val newTableMovie =
     sql"""
          |CREATE TABLE Movie (
-         |    `index` int,
-         |    budget bigint,
+         |    `index` int NOT NULL,
+         |    budget bigint NOT NULL,
          |    homepage varchar(255),
-         |    idMovie int PRIMARY KEY,
-         |    name_original_language varchar(255),
-         |    original_title varchar(255),
+         |    idMovie int NOT NULL PRIMARY KEY,
+         |    keywords varchar(255),
+         |    name_original_language varchar(255) NOT NULL,
+         |    original_title varchar(255) NOT NULL,
          |    overview TEXT,
-         |    popularity double,
+         |    popularity double NOT NULL,
          |    release_date varchar(255),
-         |    revenue bigint,
+         |    revenue bigint NOT NULL,
          |    runtime double,
-         |    nameStatus varchar(255),
+         |    nameStatus varchar(255) NOT NULL,
          |    tagline varchar(255),
-         |    title varchar(255),
-         |    vote_average double,
-         |    vote_count int,
+         |    title varchar(255) NOT NULL,
+         |    vote_average double NOT NULL,
+         |    vote_count int NOT NULL,
          |    nameDirector varchar(255)
          |);""".stripMargin
       .update
-      .apply()
+      .apply()*/
 
-  val newTableStatus =
+  // UNO A MUCHOS
+
+  /*val newTableStatus =
     sql"""
          |CREATE TABLE `Status` (
-         |    nameStatus varchar(100) PRIMARY KEY
+         |    nameStatus varchar(100) PRIMARY KEY NOT NULL
          |);""".stripMargin
       .update
       .apply()
@@ -67,10 +71,12 @@ object SentenciasCreateTable extends App {
   val newTableOriginalLanguage =
     sql"""
          |CREATE TABLE original_language (
-         |    name_original_language varchar(100) PRIMARY KEY
+         |    name_original_language varchar(100) PRIMARY KEY NOT NULL
          |);""".stripMargin
       .update
       .apply()
+
+  // TABLAS APARTE
 
   val newTableGenre =
     sql"""
@@ -79,24 +85,69 @@ object SentenciasCreateTable extends App {
          |);""".stripMargin
       .update
       .apply()
-
-  val newTableMovieGenres =
-    sql"""
-         |CREATE TABLE Movie_Genres (
-         |	idMovie int,
-         |	nameGenre varchar(100),
-	       |  PRIMARY KEY (idMovie, nameGenre),
-         |  FOREIGN KEY (idMovie) REFERENCES Movie(idMovie),
-         |  FOREIGN KEY (nameGenre) REFERENCES Genre(nameGenre)
-         |);""".stripMargin
-      .update
-      .apply()
+  
 
   val newTableProductionCompanies =
     sql"""
          |CREATE TABLE production_companies (
          |	namePCompany varchar(255),
          |  idPCompany int PRIMARY KEY
+         |);""".stripMargin
+      .update
+      .apply()
+
+
+  val newTableProductionCountries =
+    sql"""
+         |CREATE TABLE production_countries (
+         |	iso_3166_1 varchar(10) PRIMARY KEY,
+         |  namePCountry varchar(255)
+         |);""".stripMargin
+      .update
+      .apply()
+
+  val newTableSpokenLanguages =
+    sql"""
+         |CREATE TABLE spoken_languages (
+         |	iso_639_1 varchar(2) PRIMARY KEY,
+         |  nameSLang varchar(255)
+         |);""".stripMargin
+      .update
+      .apply()
+
+
+  /*val newTableCast =
+    sql"""
+         |CREATE TABLE `Cast` (
+         |    nameCast varchar(255) PRIMARY KEY
+         |);""".stripMargin
+      .update
+      .apply()*/
+
+  val newTableCrew =
+    sql"""
+         |CREATE TABLE Crew (
+         |    nameCrew varchar (255),
+         |    gender varchar (255),
+         |    department varchar (255),
+         |    job varchar (255),
+         |    credit_id varchar (255),
+         |    idCrew int,
+         |    PRIMARY KEY (credit_id)
+         |);""".stripMargin
+      .update
+      .apply()*/
+
+  // MUCHOS A MUCHOS
+
+  val newTableMovieGenres =
+    sql"""
+         |CREATE TABLE Movie_Genres (
+         |	idMovie int,
+         |	nameGenre varchar(100),
+         |  PRIMARY KEY (idMovie, nameGenre),
+         |  FOREIGN KEY (idMovie) REFERENCES Movie(idMovie),
+         |  FOREIGN KEY (nameGenre) REFERENCES Genre(nameGenre)
          |);""".stripMargin
       .update
       .apply()
@@ -113,16 +164,6 @@ object SentenciasCreateTable extends App {
       .update
       .apply()
 
-  val newTableProductionCountries =
-    sql"""
-         |CREATE TABLE production_countries (
-         |	iso_3166_1 varchar(10) PRIMARY KEY,
-         |  namePCountry varchar(255)
-         |);""".stripMargin
-      .update
-      .apply()
-
-
   val newTableMovieProductionCountries =
     sql"""
          |CREATE TABLE Movie_production_countries (
@@ -131,15 +172,6 @@ object SentenciasCreateTable extends App {
          |	PRIMARY KEY(idMovie, iso_3166_1),
          |    FOREIGN KEY (idMovie) REFERENCES Movie(idMovie),
          |    FOREIGN KEY (iso_3166_1) REFERENCES production_countries(iso_3166_1)
-         |);""".stripMargin
-      .update
-      .apply()
-
-  val newTableSpokenLanguages =
-    sql"""
-         |CREATE TABLE spoken_languages (
-         |	iso_639_1 varchar(2) PRIMARY KEY,
-         |  nameSLang varchar(255)
          |);""".stripMargin
       .update
       .apply()
@@ -156,14 +188,6 @@ object SentenciasCreateTable extends App {
       .update
       .apply()
 
-  val newTableCast =
-    sql"""
-         |CREATE TABLE `Cast` (
-         |    nameCast varchar(255) PRIMARY KEY
-         |);""".stripMargin
-      .update
-      .apply()
-
   val newTableMovieCast =
     sql"""
          |CREATE TABLE Movie_Cast (
@@ -176,23 +200,7 @@ object SentenciasCreateTable extends App {
       .update
       .apply()
 
-  */
-
-  /*val newTableCrew =
-    sql"""
-         |CREATE TABLE Crew (
-         |    nameCrew varchar (255),
-         |    gender varchar (255),
-         |    department varchar (255),
-         |    job varchar (255),
-         |    credit_id varchar (255),
-         |    idCrew varchar (255),
-         |    PRIMARY KEY (credit_id)
-         |);""".stripMargin
-      .update
-      .apply()*/
-
-  /*val newTableMovieCrew =
+  val newTableMovieCrew =
     sql"""
          |CREATE TABLE Movie_Crew (
          |	idMovie int,
@@ -202,6 +210,7 @@ object SentenciasCreateTable extends App {
          |    FOREIGN KEY (credit_id) REFERENCES Crew(credit_id)
          |);""".stripMargin
       .update
-      .apply()*/
+      .apply()
+
 
 }

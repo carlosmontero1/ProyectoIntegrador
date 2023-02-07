@@ -149,7 +149,7 @@ object AnalisisExploratorioColumnasNoNumericas extends App {
   // Funcion (Lista de Objetos Formato JSON)
 
   val parse = (columna: String) => {
-    data.flatMap(x => x.get(columna)).map(Json.parse)
+    data.flatMap(x => x.get(columna)).filter(_.nonEmpty).map(Json.parse)
   }
 
   // ------------------------------------------------------------------------------------------------
@@ -422,6 +422,8 @@ object AnalisisExploratorioColumnasNoNumericas extends App {
   }
 
   println(repeatedNamesId.filter(_._2 > 1.0))*/
+
+  // Consulta
 
   val bradPitt = data
     .map(x => (x("title"), x("budget"), x("cast")))

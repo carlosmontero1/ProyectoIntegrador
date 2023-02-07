@@ -105,6 +105,7 @@ object AnalisisExploratorioNumericas2 extends App {
 
   val budget = data
     .map(x => (x("title"), x("budget").toLong))
+    .filter(_._1.nonEmpty)
     .sortBy(_._2)
     .reverse
     .take(10)
@@ -502,6 +503,7 @@ object AnalisisExploratorioNumericas2 extends App {
     .bottomLegend()
     .render()
     .write(new File("/Users/carlosmontero/Desktop/ColumnasNumericas/taglineIsEmpty.png"))
+
 
 
 }

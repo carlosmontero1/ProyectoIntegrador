@@ -36,6 +36,7 @@ object SentenciasInsertInto extends App {
         x("budget").toLong,
         x("homepage"),
         x("id").toInt,
+        x("keywords"),
         x("original_language"),
         x("original_title"),
         x("overview"),
@@ -58,9 +59,9 @@ object SentenciasInsertInto extends App {
 
   val newRowMovie = Movie.map(x =>
     sql"""
-         |INSERT INTO Movie (`index`, budget, homepage, idMovie, name_original_language, original_title, overview, popularity, release_date, revenue, runtime, nameStatus, tagline, title, vote_average, vote_count, nameDirector)
+         |INSERT INTO Movie (`index`, budget, homepage, idMovie, keywords, name_original_language, original_title, overview, popularity, release_date, revenue, runtime, nameStatus, tagline, title, vote_average, vote_count, nameDirector)
          |VALUES
-         |(${x._1}, ${x._2}, ${x._3}, ${x._4}, ${x._5}, ${x._6}, ${x._7}, ${x._8}, ${x._9}, ${x._10}, ${x._11}, ${x._12}, ${x._13}, ${x._14}, ${x._15}, ${x._16}, ${x._17})
+         |(${x._1}, ${x._2}, ${x._3}, ${x._4}, ${x._5}, ${x._6}, ${x._7}, ${x._8}, ${x._9}, ${x._10}, ${x._11}, ${x._12}, ${x._13}, ${x._14}, ${x._15}, ${x._16}, ${x._17}, ${x._18})
          """.stripMargin
       .update
       .apply())*/
@@ -69,6 +70,7 @@ object SentenciasInsertInto extends App {
 
   /*val Status = data
     .flatMap(x => x.get("status"))
+    .filter(_.nonEmpty)
     .distinct
     .sorted
 
@@ -81,11 +83,11 @@ object SentenciasInsertInto extends App {
          |(${x})
                """.stripMargin
       .update
-      .apply())*/
+      .apply())
 
   // ------------------------------------------------------------------------------------------------
 
-  /*val Director = data
+  val Director = data
     .flatMap(x => x.get("director"))
     .filter(!_.equals(""))
     .map(StringContext.processEscapes)
@@ -101,12 +103,13 @@ object SentenciasInsertInto extends App {
            |(${x})
                """.stripMargin
         .update
-        .apply())*/
+        .apply())
 
   // ------------------------------------------------------------------------------------------------
 
-  /*val original_language = data
+  val original_language = data
     .flatMap(x => x.get("original_language"))
+    .filter(_.nonEmpty)
     .distinct
     .sorted
 
@@ -307,7 +310,7 @@ object SentenciasInsertInto extends App {
       Option.empty
   }
 
-  val Cast = data
+  /*val Cast = data
       .map(row => row("cast"))
       .filter(_.nonEmpty)
       .map(StringContext.processEscapes)
@@ -319,7 +322,7 @@ object SentenciasInsertInto extends App {
       .flatMap(json => json("entity_list").as[JsArray].value)
       .map(_("form"))
       .map(data => data.as[String])
-      .toSet // Para elimnar duplicados
+      .toSet // Para elimnar duplicados*/
 
   //println(Cast)
 
@@ -384,7 +387,7 @@ object SentenciasInsertInto extends App {
     txtOr
   }
 
-  val Crew = data
+  /*val Crew = data
     .map(row => row("crew"))
     .map(replacePatterns(_, patternsTR))
     .map(text => text.replace("'", "\""))
@@ -397,16 +400,18 @@ object SentenciasInsertInto extends App {
     .map(x => (x("name").as[String], x("gender").as[Int], x("department").as[String], x("job").as[String], x("credit_id").as[String], x("id").as[Int]))
     .distinct
 
+  println(Crew.filter(_._1.contains("'")))
+
   //println(Crew)
 
-  /*val newRowCrew = Crew.map(x =>
+  val newRowCrew = Crew.map(x =>
             sql"""
                  |INSERT INTO Crew(nameCrew, gender, department, job, credit_id, idCrew)
                  |VALUES
                  |(${x._1}, ${x._2}, ${x._3}, ${x._4}, ${x._5}, ${x._6})
                      """.stripMargin
               .update
-              .apply())*/
+              .apply())
 
   // ------------------------------------------------------------------------------------------------
 
@@ -431,7 +436,7 @@ object SentenciasInsertInto extends App {
 
   //println(Movie_Crew.filter(_._1 == 199995))
 
-  /*val newRowMovie_Crew = Movie_Crew.map(x =>
+  val newRowMovie_Crew = Movie_Crew.map(x =>
     sql"""
          |INSERT INTO Movie_Crew(idMovie, credit_id)
          |VALUES
@@ -546,7 +551,6 @@ object SentenciasInsertInto extends App {
     )*/
 
   // ------------------------------------------------------------------------------------------------
-
 
 
 }
